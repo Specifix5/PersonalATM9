@@ -26,7 +26,11 @@ while true do
         local args = string.split(message, " ")
         if string.starts(message, "femboy") then
             if messageHistory[args[2]] ~= nil then
-                local femboyed = messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w").." >w<"
+                local femboyed = messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w").." >//w//<"
+                local _username = args[2]
+                if (_username == "WhiteWorrior123" or _username == "glitch_inthecode") then
+                    _username = "§2"..args[2]
+                end
                 print(args[2].."> "..femboyed)
                 cb.sendMessage(femboyed, args[2], "<>");
             else
