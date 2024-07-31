@@ -17,16 +17,21 @@ end
 
 local messageHistory = {}
 
-while os.sleep(0.1) do
+while true do
     local event, username, message, uuid, isHidden = os.pullEvent("chat")
 
     messageHistory[username] = message
 
     if string.starts(username, "nekoyuri") then
-        cb.sendMessage("test", username)
         local args = string.split(message, " ")
         if string.starts(message, "femboy") then
-            cb.sendMessage(messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w").." >w<", username, "<>");
+            if messageHistory[args[2]] ~= nil then
+                local femboyed = messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w").." >w<"
+                print(args[2].."> "..femboyed)
+                cb.sendMessage(femboyed, args[2], "<>");
+            else
+                print("Femboy "..args[2].." is nil!")
+            end
         end
     end
 end
