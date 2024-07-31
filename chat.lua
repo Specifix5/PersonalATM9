@@ -23,6 +23,7 @@ while os.sleep(0.1) do
     messageHistory[username] = message
 
     if string.starts(username, "nekoyuri") then
+        cb.sendMessage("test", username)
         local args = string.split(message, " ")
         if string.starts(message, "femboy") then
             cb.sendMessage(messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w").." >w<", username, "<>");
