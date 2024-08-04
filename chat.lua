@@ -17,8 +17,8 @@ end
 
 local messageHistory = {}
 
-if fs.exists("rom/history.json") then
-    local _ = fs.open("rom/history.json", "r")
+if fs.exists("./history.json") then
+    local _ = fs.open("./history.json", "r")
     local _json = textutils.unserializeJSON(_.readAll())
     messageHistory = _json
     _.close()
@@ -33,7 +33,7 @@ while true do
 
     messageHistory[username] = message
 
-    local _ = fs.open("rom/history.json", "w")
+    local _ = fs.open("./history.json", "w")
     local _json = textutils.serializeJSON(messageHistory)
     _.write(_json)
     _.close()
