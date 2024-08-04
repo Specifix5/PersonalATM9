@@ -17,10 +17,22 @@ end
 
 local messageHistory = {}
 
+if fs.exists("rom/history.json") then
+    local _ = fs.open("rom/history.json", "r")
+    local _json = textutils.unserializeJSON(_.readAll())
+    messageHistory = _json
+    _.close()
+end
+
 while true do
     local event, username, message, uuid, isHidden = os.pullEvent("chat")
 
     messageHistory[username] = message
+
+    local _ = fs.open("rom/history.json", "w+")
+    local _json = textutils.serializeJSON(messageHistory)
+    _.write(_json)
+    _.close()
 
     if string.starts(username, "nekoyuri") then
         local args = string.split(message, " ")
