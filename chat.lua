@@ -24,12 +24,16 @@ if fs.exists("rom/history.json") then
     _.close()
 end
 
+term.clear()
+print("Femboyinator v1.0 by Specifix")
+print("- Frame anyone as a femboy -")
+
 while true do
     local event, username, message, uuid, isHidden = os.pullEvent("chat")
 
     messageHistory[username] = message
 
-    local _ = fs.open("rom/history.json", "w+")
+    local _ = fs.open("rom/history.json", "w")
     local _json = textutils.serializeJSON(messageHistory)
     _.write(_json)
     _.close()
