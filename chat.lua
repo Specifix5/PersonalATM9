@@ -38,10 +38,14 @@ while true do
     _.write(_json)
     _.close()
 
-    if string.starts(username, "nekoyuri") then
+    if string.starts(username, "nekoyuri") or string.starts(username, "Destroye3t") then
         local args = string.split(message, " ")
         if string.starts(message, "femboy") then
             if messageHistory[args[2]] ~= nil then
+                if args[2] == "nekoyuri" then
+                    cb.sendMessage("i-i-i feel a little c-cute~ >w<", username, "<>");
+                    return
+                end
                 local femboyed = messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w"):gsub("l", "w").." >//w//<"
                 femboyed = string.sub(femboyed, 1, 1).."-"..femboyed
                 femboyed = string.lower(femboyed)
