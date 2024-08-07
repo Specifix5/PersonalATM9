@@ -38,7 +38,7 @@ while true do
     _.write(_json)
     _.close()
 
-    if string.starts(username, "nekoyuri") or string.starts(username, "Destroye3t") then
+    if string.starts(username, "nekoyuri") or string.starts(username, "Destroye3t") or string.starts(username, "WhiteWorrior123") then
         local args = string.split(message, " ")
         if string.starts(message, "femboy") then
             if messageHistory[args[2]] ~= nil then
@@ -54,7 +54,7 @@ while true do
                     _username = "§2"..args[2]
                 end
                 print(args[2].."> "..femboyed)
-                cb.sendMessage(femboyed, args[2], "<>");
+                cb.sendMessage(femboyed, _username, "<>");
             else
                 print("Femboy "..args[2].." is nil!")
             end
