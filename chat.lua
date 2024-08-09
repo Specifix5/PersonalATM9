@@ -44,9 +44,6 @@ while true do
             if messageHistory[args[2]] ~= nil then
                 if args[2] == "nekoyuri" then
                     local _username = username
-                    if (_username == "WhiteWorrior123" or _username == "glitch_inthecode") then
-                        _username = "§2"..args[2]
-                    end
                     cb.sendMessage("i-i-i feel a little c-cute~ >w<", _username, "<>");
                     return
                 end
@@ -54,9 +51,6 @@ while true do
                 femboyed = string.sub(femboyed, 1, 1).."-"..femboyed
                 femboyed = string.lower(femboyed)
                 local _username = args[2]
-                if (_username == "WhiteWorrior123" or _username == "glitch_inthecode") then
-                    _username = "§2"..args[2]
-                end
                 print(args[2].."> "..femboyed)
                 cb.sendMessage(femboyed, _username, "<>");
             else
