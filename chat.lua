@@ -43,7 +43,11 @@ while true do
         if string.starts(message, "femboy") then
             if messageHistory[args[2]] ~= nil then
                 if args[2] == "nekoyuri" then
-                    cb.sendMessage("i-i-i feel a little c-cute~ >w<", username, "<>");
+                    local _username = username
+                    if (_username == "WhiteWorrior123" or _username == "glitch_inthecode") then
+                        _username = "§2"..args[2]
+                    end
+                    cb.sendMessage("i-i-i feel a little c-cute~ >w<", _username, "<>");
                     return
                 end
                 local femboyed = messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w"):gsub("l", "w").." >//w//<"
