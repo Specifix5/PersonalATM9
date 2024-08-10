@@ -15,6 +15,14 @@ function string.split(inputstr, sep)
     return t
 end
 
+function parseUsername(str)
+    if str == "WhiteWorrior123" or str == "glitch_inthecode" then
+        return "§2"..str
+    else
+        return str
+    end
+end
+
 local messageHistory = {}
 
 if fs.exists("./history.json") then
@@ -43,14 +51,14 @@ while true do
         if string.starts(message, "femboy") then
             if messageHistory[args[2]] ~= nil then
                 if args[2] == "nekoyuri" then
-                    local _username = username
+                    local _username = parseUsername(username)
                     cb.sendMessage("i-i-i feel a little c-cute~ >w<", _username, "<>");
                     return
                 end
                 local femboyed = messageHistory[args[2]]:gsub("o", "wo"):gsub("r", "w"):gsub("l", "w").." >//w//<"
                 femboyed = string.sub(femboyed, 1, 1).."-"..femboyed
                 femboyed = string.lower(femboyed)
-                local _username = args[2]
+                local _username = parseUsername(args[2])
                 print(args[2].."> "..femboyed)
                 cb.sendMessage(femboyed, _username, "<>");
             else
