@@ -38,7 +38,7 @@ while true do
     _.write(_json)
     _.close()
 
-    if string.starts(username, "nekoyuri") or string.starts(username, "Destroye3t") or string.starts(username, "WhiteWorrior123") then
+    if string.starts(username, "nekoyuri") or string.starts(username, "Destroye3t") or string.starts(username, "WhiteWorrior123") or string.starts(username, "glitch_inthecode") then
         local args = string.split(message, " ")
         if string.starts(message, "femboy") then
             if messageHistory[args[2]] ~= nil then
