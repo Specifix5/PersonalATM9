@@ -15,7 +15,9 @@ end
 
 print("Simple Music Player by Specifix")
 while true do
+    term.setTextColor(colors.yellow)
     write("Player> ")
+    term.setTextColor(colors.white)
     local file = read()
     local chunks = 0
     if string.split(file, ".")[2] ~= nil and string.split(file, ".")[2] == "dfpwm" then
