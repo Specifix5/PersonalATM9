@@ -4,6 +4,7 @@ local monitors = { peripheral.find("monitor") }
 local decoder = dfpwm.make_decoder()
 
 local songName = "None"
+local numChunks = 0
 
 function string.split(inputstr, sep)
     if sep == nil then
@@ -16,7 +17,7 @@ function string.split(inputstr, sep)
     return t
 end
 
-function updateMonitorSongName(newName)
+function updateMonitorSongName(newName, currentChunk)
     songName = newName
     for _, monitor in pairs(monitors) do
         monitor.setTextScale(0.5)
@@ -36,6 +37,15 @@ function updateMonitorSongName(newName)
         end
         monitor.write(songName)
         monitor.setTextColor(colors.white)
+
+        if songName ~= "None" then
+            monitor.setCursorPos(1, 4) 
+            monitor.write("Playing ")
+            monitor.setTextColor(colors.yellow)
+            monitor.write(currentChunk.."/"..numChunks)
+            monitor.setTextColor(colors.white)
+            monitor.write(" chunks")
+        end
     end
 end
 
@@ -52,8 +62,10 @@ while true do
     if string.split(file, ".")[2] ~= nil and string.split(file, ".")[2] == "dfpwm" then
         updateMonitorSongName(string.split(file, ".")[1])
         print("Now playing: "..songName)
+        numChunks = #io.lines(file, 16 * 1024)
         for chunk in io.lines(file, 16 * 1024) do
             chunks = chunks + 1
+            updateMonitorSongName(songName, chunks)
             local buffer = decoder(chunk)
         
             while not speaker.playAudio(buffer) do
