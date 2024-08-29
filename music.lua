@@ -19,13 +19,15 @@ end
 function updateMonitorSongName(newName)
     songName = newName
     for _, monitor in pairs(monitors) do
+        monitor.setTextScale(0.5)
         monitor.clear()
         monitor.setCursorPos(1, 1) 
         monitor.setTextColor(colors.white)
         monitor.write("Simple Music Player by ")
-        monitor.write(colors.yellow)
-        monitor.write("Specifix\n")
+        monitor.setTextColor(colors.yellow)
+        monitor.write("Specifix")
         monitor.setTextColor(colors.white)
+        monitor.setCursorPos(1, 2) 
         monitor.write("Currently playing: ")
         if songName == "None" then
             monitor.setTextColor(colors.red)
