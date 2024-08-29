@@ -13,6 +13,7 @@ function string.split(inputstr, sep)
     return t
 end
 
+term.clear()
 print("Simple Music Player by Specifix")
 while true do
     term.setTextColor(colors.yellow)
