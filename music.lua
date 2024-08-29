@@ -46,7 +46,7 @@ function updateMonitorSongName(newName, currentChunk)
         monitor.write(songName)
         monitor.setTextColor(colors.white)
 
-        if songName ~= "None" then
+        if songName ~= "None" and currentChunk ~= nil then
             monitor.setCursorPos(1, 4) 
             monitor.write("Playing ")
             monitor.setTextColor(colors.yellow)
@@ -68,7 +68,7 @@ while true do
     local file = read()
     local chunks = 0
     if string.split(file, ".")[2] ~= nil and string.split(file, ".")[2] == "dfpwm" then
-        updateMonitorSongName(string.split(file, ".")[1])
+        updateMonitorSongName(string.split(file, ".")[1], 0)
         print("Now playing: "..songName)
         numChunks = getTotalChunks(file)
         for chunk in io.lines(file, 16 * 1024) do
