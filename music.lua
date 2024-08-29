@@ -17,6 +17,14 @@ function string.split(inputstr, sep)
     return t
 end
 
+function getTotalChunks(file)
+    local _chunks = 0
+    for chunk in io.lines(file, 16 * 1024) do
+        _chunks = _chunks + 1
+    end
+    return _chunks
+end
+
 function updateMonitorSongName(newName, currentChunk)
     songName = newName
     for _, monitor in pairs(monitors) do
@@ -62,7 +70,7 @@ while true do
     if string.split(file, ".")[2] ~= nil and string.split(file, ".")[2] == "dfpwm" then
         updateMonitorSongName(string.split(file, ".")[1])
         print("Now playing: "..songName)
-        numChunks = #io.lines(file, 16 * 1024)
+        numChunks = getTotalChunks(file)
         for chunk in io.lines(file, 16 * 1024) do
             chunks = chunks + 1
             updateMonitorSongName(songName, chunks)
