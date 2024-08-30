@@ -35,6 +35,8 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks)
     end
 end
 
+term.clear()
+
 updateMonitorSongName("None", 0, "Idle", 0)
 
 while true do
