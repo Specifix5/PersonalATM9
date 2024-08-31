@@ -57,6 +57,12 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks, is
             monitor.write("! EMERGENCY BROADCAST !")
             monitor.setTextColor(colors.white)
         end
+
+        monitor.setCursorPos(1, 10) 
+        monitor.setTextColor(colors.gray)
+        monitor.write("~ 2024 (C) CURVE Technologies ~")
+        monitor.setTextColor(colors.white)
+
     end
 end
 
