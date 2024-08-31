@@ -16,7 +16,7 @@ for _, modem in pairs(modems) do
     end
 end
 
-function updateMonitorSongName(newName, currentChunk, stationName, numChunks)
+function updateMonitorSongName(newName, currentChunk, stationName, numChunks, isEAS)
     songName = newName
     for _, monitor in pairs(monitors) do
         monitor.setTextScale(0.5)
@@ -50,6 +50,13 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks)
         monitor.setTextColor(colors.yellow)
         monitor.write(#speakers.."/"..#wiredModems)
         monitor.setTextColor(colors.white)
+
+        if isEAS then
+            monitor.setCursorPos(1, 6) 
+            monitor.setTextColor(colors.yellow)
+            monitor.write("! EMERGENCY BROADCAST !")
+            monitor.setTextColor(colors.white)
+        end
     end
 end
 
@@ -82,13 +89,13 @@ end
 while true do
     id, message = rednet.receive("RADIO", 5)
     if message ~= nil and message.audio_chunk ~= nil then
-        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (CH#"..id..")", message.numChunks)
+        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (CH#"..id..")", message.numChunks, message.EAS)
         local buffer = decoder(message.audio_chunk)
         play_all(buffer)
 
     elseif message == nil then
         updateMonitorSongName("None", 0, "Idle", 0)
     else
-        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (CH#"..id..")", message.numChunks)
+        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (CH#"..id..")", message.numChunks, message.EAS)
     end
 end
