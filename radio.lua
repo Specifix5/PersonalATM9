@@ -1,8 +1,20 @@
 local dfpwm = require("cc.audio.dfpwm")
-local speaker = peripheral.find("speaker")
+local speakers = { peripheral.find("speaker") }
 local monitors = { peripheral.find("monitor") }
+local modems = { peripheral.find("modem") }
+local wiredModems = {}
 local decoder = dfpwm.make_decoder()
-peripheral.find("modem", rednet.open)
+
+local rednetOpened = false
+
+for _, modem in pairs(modems) do
+    if modem.isWireless() and not rednetOpened then
+        rednet.open(peripheral.getName(modem))
+        rednetOpened = true
+    elseif not modem.isWireless() then
+        table.insert(wiredModems, modem)
+    end
+end
 
 function updateMonitorSongName(newName, currentChunk, stationName, numChunks)
     songName = newName
@@ -31,6 +43,11 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks)
             monitor.setTextColor(colors.yellow)
             monitor.write(currentChunk.."/"..numChunks)
             monitor.setTextColor(colors.white)
+            monitor.setCursorPos(1, 5) 
+            monitor.write("Speakers/Modem: ")
+            monitor.setTextColor(colors.yellow)
+            monitor.write(#speakers.."/"..#wiredModems)
+            monitor.setTextColor(colors.white)
         end
     end
 end
@@ -44,7 +61,10 @@ while true do
     if message ~= nil and message.audio_chunk ~= nil then
         updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (#"..id..")", message.numChunks)
         local buffer = decoder(message.audio_chunk)
-        speaker.playAudio(buffer)
+        for _, speaker in pairs(speakers) do
+            speaker.playAudio(buffer)
+        end
+
     elseif message == nil then
         updateMonitorSongName("None", 0, "Idle", 0)
     else
