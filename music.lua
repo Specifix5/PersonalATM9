@@ -71,6 +71,13 @@ function updateMonitorSongName(newName, currentChunk)
             monitor.write(" chunks")
         end
 
+        if EAS then
+            monitor.setCursorPos(1, 5) 
+            monitor.setTextColor(colors.red)
+            monitor.write("! EAS MODE ACTIVE !")
+            monitor.setTextColor(colors.white)
+        end
+
         monitor.setCursorPos(1, 10) 
         monitor.setTextColor(colors.gray)
         monitor.write("~ 2024 (C) CURVE Technologies ~")
