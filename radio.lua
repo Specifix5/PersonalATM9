@@ -82,13 +82,13 @@ end
 while true do
     id, message = rednet.receive("RADIO", 5)
     if message ~= nil and message.audio_chunk ~= nil then
-        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (#"..id..")", message.numChunks)
+        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (CH#"..id..")", message.numChunks)
         local buffer = decoder(message.audio_chunk)
         play_all(buffer)
 
     elseif message == nil then
         updateMonitorSongName("None", 0, "Idle", 0)
     else
-        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (#"..id..")", message.numChunks)
+        updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (CH#"..id..")", message.numChunks)
     end
 end
