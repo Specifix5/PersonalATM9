@@ -9,6 +9,7 @@ local songName = "None"
 local numChunks = 0
 
 local StationName = "ULTRAKILL"
+local EAS = false
 
 function string.split(inputstr, sep)
     if sep == nil then
@@ -35,7 +36,8 @@ function broadcast(songName, currentChunk, numChunks, audio_chunk, stationName)
         ["stationName"] = stationName,
         ["currentChunk"] = currentChunk,
         ["numChunks"] = numChunks,
-        ["audio_chunk"] = audio_chunk
+        ["audio_chunk"] = audio_chunk,
+        ["EAS"] = EAS
     }, "RADIO")
 end
 
