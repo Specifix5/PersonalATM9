@@ -53,6 +53,25 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks)
     end
 end
 
+local function play_all(buffer)
+    local speaker_funcs = {}
+  
+    for i, speaker in ipairs(speakers) do
+        local speaker_name = peripheral.getName(speaker)
+        speaker_funcs[i] = function()
+            speaker.playAudio(buffer)
+    
+            -- wait until THIS speaker is ready for more buffer
+            repeat
+                local _, spkr = os.pullEvent("speaker_audio_empty")
+            until spkr == speaker_name
+        end
+    end
+    
+    -- Unpack the table of functions into parallel.waitForAll, so it runs them all at once.
+    parallel.waitForAll(table.unpack(speaker_funcs))
+end
+
 term.clear()
 
 updateMonitorSongName("None", 0, "Idle", 0)
@@ -65,9 +84,7 @@ while true do
     if message ~= nil and message.audio_chunk ~= nil then
         updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (#"..id..")", message.numChunks)
         local buffer = decoder(message.audio_chunk)
-        for _, speaker in pairs(speakers) do
-            speaker.playAudio(buffer)
-        end
+        play_all(buffer)
 
     elseif message == nil then
         updateMonitorSongName("None", 0, "Idle", 0)
