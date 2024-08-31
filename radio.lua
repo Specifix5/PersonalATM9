@@ -53,7 +53,7 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks, is
 
         if isEAS then
             monitor.setCursorPos(1, 6) 
-            monitor.setTextColor(colors.yellow)
+            monitor.setTextColor(colors.red)
             monitor.write("! EMERGENCY BROADCAST !")
             monitor.setTextColor(colors.white)
         end
