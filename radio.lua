@@ -43,18 +43,22 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks)
             monitor.setTextColor(colors.yellow)
             monitor.write(currentChunk.."/"..numChunks)
             monitor.setTextColor(colors.white)
-            monitor.setCursorPos(1, 5) 
-            monitor.write("Speakers/Modem: ")
-            monitor.setTextColor(colors.yellow)
-            monitor.write(#speakers.."/"..#wiredModems)
-            monitor.setTextColor(colors.white)
         end
+
+        monitor.setCursorPos(1, 5) 
+        monitor.write("Speakers/Modem: ")
+        monitor.setTextColor(colors.yellow)
+        monitor.write(#speakers.."/"..#wiredModems)
+        monitor.setTextColor(colors.white)
     end
 end
 
 term.clear()
 
 updateMonitorSongName("None", 0, "Idle", 0)
+for _, speaker in pairs(speakers) do
+    speaker.stop()
+end
 
 while true do
     id, message = rednet.receive("RADIO", 5)
