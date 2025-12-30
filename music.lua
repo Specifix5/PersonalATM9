@@ -5,12 +5,11 @@ local decoder = dfpwm.make_decoder()
 
 local rednetEnabled = false
 local modems = { peripheral.find("modem") }
-if #modems > 0 then
-    for _, modem in pairs(modems) do
-        local name = peripheral.getName(modem)
-        rednet.open(name)
+for _, modem in pairs(modems) do
+    if modem.isWireless() and not rednetEnabled then
+        rednet.open(peripheral.getName(modem))
+        rednetEnabled = true
     end
-    rednetEnabled = true
 end
 
 local songName = "None"
