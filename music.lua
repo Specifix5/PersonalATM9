@@ -41,14 +41,14 @@ function readEnvOverride()
     local currentLine = 0
     local success = 0
     for line in io.lines("/radio.env") do
-        currentLine += 1
+        currentLine = currentLine + 1
         local _split = string.split(line, "=")
         if #_split ~= 2 then
             print("Line "..currentLine.." malformed, skipping..")
         else
             local name, value = _split[1], _split[2]
             radioConfigs[name] = value
-            success += 1
+            success = success + 1
         end
     end
 
@@ -161,7 +161,7 @@ print("Simple Music/Radio Player by Specifix")
 readEnvOverride()
 if rednetEnabled then
     print("Rednet active, will broadcast..")
-ebd
+end
 updateMonitorSongName("None")
 broadcast("None", 0, 0, nil, radioConfigs["stationName"])
 listDfpwmFiles()
