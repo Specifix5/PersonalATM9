@@ -50,7 +50,7 @@ function listDfpwmFiles()
     local audioFiles = {}
     for _, file in ipairs(files) do
         if string.match(file, ".dfpwm") then
-            table.insert(audioFiles, file)
+            table.insert(audioFiles, file:gsub(".dfpwm", ""))
         end
     end
 
