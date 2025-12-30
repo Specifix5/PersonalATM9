@@ -71,7 +71,7 @@ function broadcast(songName, currentChunk, numChunks, audio_chunk, stationName)
         ["currentChunk"] = currentChunk,
         ["numChunks"] = numChunks,
         ["audio_chunk"] = audio_chunk,
-        ["EAS"] = EAS
+        ["EAS"] = radioConfigs["EAS"]
     }, "RADIO")
 end
 
@@ -156,7 +156,7 @@ end
 
 term.clear()
 term.setCursorPos(1, 1) 
-print("Simple Music/Radio Player by Specifix")
+print("MK.II Radio Station | by Specifix")
 readEnvOverride()
 if rednetEnabled then
     print("Rednet active, will broadcast..")
