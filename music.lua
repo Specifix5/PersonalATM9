@@ -4,8 +4,12 @@ local monitors = { peripheral.find("monitor") }
 local decoder = dfpwm.make_decoder()
 
 local rednetEnabled = false
-if #peripheral.find("modem") > 0 then
-    peripheral.find("modem", rednet.open)
+local modems = { peripheral.find("modem") }
+if #modems > 0 then
+    for _, modem in pairs(modems) do
+        local name = peripheral.getName(modem)
+        rednet.open(name)
+    end
     rednetEnabled = true
 end
 
@@ -112,7 +116,7 @@ function updateMonitorSongName(newName, currentChunk)
             monitor.setCursorPos(1, 8)
             monitor.write("Channel: ")
             monitor.setTextColor(colors.yellow)
-            monitor.write("#"..os.getComputerId())
+            monitor.write("#"..os.getComputerID())
         end
 
         monitor.setCursorPos(1, 10) 
