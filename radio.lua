@@ -7,6 +7,10 @@ local decoder = dfpwm.make_decoder()
 
 local rednetOpened = false
 
+local CHUNK_SIZE = 16 * 1024
+local SAMPLE_RATE = 48000
+local SECONDS_PER_CHUNK = (CHUNK_SIZE * 8) / SAMPLE_RATE
+
 for _, modem in pairs(modems) do
     if modem.isWireless() and not rednetOpened then
         rednet.open(peripheral.getName(modem))
@@ -14,6 +18,17 @@ for _, modem in pairs(modems) do
     elseif not modem.isWireless() then
         table.insert(wiredModems, modem)
     end
+end
+
+function to_mss(totalSeconds)
+  local m = math.floor(totalSeconds / 60)
+  local s = totalSeconds % 60
+  return string.format("%d:%02d", m, s)
+end
+
+function getLength(numChunks)
+    local length = to_mss(numChunks * SECONDS_PER_CHUNK)
+    return length
 end
 
 function updateMonitorSongName(newName, currentChunk, stationName, numChunks, isEAS)
@@ -42,6 +57,10 @@ function updateMonitorSongName(newName, currentChunk, stationName, numChunks, is
             monitor.write("Chunk: ")
             monitor.setTextColor(colors.yellow)
             monitor.write(currentChunk.."/"..numChunks)
+            
+            local songLength = getLength(numChunks)
+            local currentLength = getLength(currentChunk)
+            monitor.write(" ("..currentLength.." / "..songLength..")")
             monitor.setTextColor(colors.white)
         end
 
@@ -105,3 +124,4 @@ while true do
         updateMonitorSongName(message.songName, message.currentChunk, message.stationName.." (CH#"..id..")", message.numChunks, message.EAS)
     end
 end
+
