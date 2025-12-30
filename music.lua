@@ -16,8 +16,10 @@ end
 local songName = "None"
 local numChunks = 0
 
-local StationName = "ULTRAKILL"
-local EAS = false
+local radioConfigs = {
+    ["stationName"] = "ULTRAKILL",
+    ["EAS"] = false
+}
 
 function string.split(inputstr, sep)
     if sep == nil then
@@ -28,6 +30,31 @@ function string.split(inputstr, sep)
       table.insert(t, str)
     end
     return t
+end
+
+function readEnvOverride()
+    if not fs.exists("/radio.env") then
+        print("/radio.env does not exist, skipping env override, using defaults")
+        return
+    end
+
+    local currentLine = 0
+    local success = 0
+    for line in io.lines("/radio.env") then
+        currentLine += 1
+        local _split = string.split(line, "=")
+        if #_split ~= 2 then
+            print("Line "..currentLine.." malformed, skipping..")
+        else
+            local name, value = _split[1], _split[2]
+            radioConfigs[name] = value
+            success += 1
+        end
+    end
+
+    if success > 0 then
+        print("/radio.env found, overriden "..success.." config vars")
+    end
 end
 
 function getTotalChunks(file)
@@ -59,7 +86,9 @@ function listDfpwmFiles()
         end
     end
 
+    term.setTextColor(colors.yellow)
     print("Available Audio Files (found "..#audioFiles.."):")
+    term.setTextColor(colors.white)
 
     for i, file in ipairs(audioFiles) do
         print(i, file)
@@ -96,7 +125,7 @@ function updateMonitorSongName(newName, currentChunk)
             monitor.write(" chunks")
         end
 
-        if EAS then
+        if radioConfigs["EAS"] then
             monitor.setCursorPos(1, 5) 
             monitor.setTextColor(colors.red)
             monitor.write("! EAS MODE ACTIVE !")
@@ -106,12 +135,12 @@ function updateMonitorSongName(newName, currentChunk)
         if rednetEnabled then
             monitor.setCursorPos(1, 6) 
             monitor.setTextColor(colors.yellow)
-            monitor.write("REDNET ACTIVE, BROADCASTING!")
+            monitor.write("REDNET ACTIVE, CAN BROADCAST")
             monitor.setTextColor(colors.white)
             monitor.setCursorPos(1, 7)
             monitor.write("Station: ")
             monitor.setTextColor(colors.yellow)
-            monitor.write(StationName)
+            monitor.write(radioConfigs["stationName"])
             monitor.setTextColor(colors.white)
             monitor.setCursorPos(1, 8)
             monitor.write("Channel: ")
@@ -121,16 +150,20 @@ function updateMonitorSongName(newName, currentChunk)
 
         monitor.setCursorPos(1, 10) 
         monitor.setTextColor(colors.gray)
-        monitor.write("~ 2024 (C) CURVE Technologies ~")
+        monitor.write("~ 2024-2025 (C) CURVE Technologies ~")
         monitor.setTextColor(colors.white)
     end
 end
 
 term.clear()
 term.setCursorPos(1, 1) 
-updateMonitorSongName("None")
-broadcast("None", 0, 0, nil, StationName)
 print("Simple Music/Radio Player by Specifix")
+readEnvOverride()
+if rednetEnabled then
+    print("Rednet active, will broadcast..")
+ebd
+updateMonitorSongName("None")
+broadcast("None", 0, 0, nil, radioConfigs["stationName"])
 listDfpwmFiles()
 while true do
     term.setTextColor(colors.yellow)
@@ -141,12 +174,12 @@ while true do
     if fs.exists(file) then
         numChunks = getTotalChunks(file)
         updateMonitorSongName(string.split(file, ".")[1], 0)
-        broadcast(songName, 0, numChunks, nil, StationName)
+        broadcast(songName, 0, numChunks, nil, radioConfigs["stationName"])
         print("Now playing: "..songName)
         for chunk in io.lines(file, 16 * 1024) do
             chunks = chunks + 1
             updateMonitorSongName(songName, chunks)
-            broadcast(songName, chunks, numChunks, chunk, StationName)
+            broadcast(songName, chunks, numChunks, chunk, radioConfigs["stationName"])
             local buffer = decoder(chunk)
         
             while not speaker.playAudio(buffer) do
@@ -157,18 +190,18 @@ while true do
         term.setTextColor(colors.red)
         print("Not a DFPWM file or File not found!")
         updateMonitorSongName("None")
-        broadcast("None", 0, 0, nil, StationName)
+        broadcast("None", 0, 0, nil, radioConfigs["stationName"])
     end
     if chunks > 0 then
         term.setTextColor(colors.yellow)
         print("Audio finished, # of chunks: "..chunks)
         updateMonitorSongName("None")
-        broadcast("None", 0, 0, nil, StationName)
+        broadcast("None", 0, 0, nil, radioConfigs["stationName"])
     else
         term.setTextColor(colors.red)
         print("Failed to play audio.. It didn't load.")
         updateMonitorSongName("None")
-        broadcast("None", 0, 0, nil, StationName)
+        broadcast("None", 0, 0, nil, radioConfigs["stationName"])
     end
     term.setTextColor(colors.white)
     listDfpwmFiles()
