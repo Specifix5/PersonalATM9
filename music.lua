@@ -41,6 +41,22 @@ function broadcast(songName, currentChunk, numChunks, audio_chunk, stationName)
     }, "RADIO")
 end
 
+function listDfpwmFiles()
+    local files = fs.list("/")
+    local audioFiles = {}
+    for _, file in ipairs(files) do
+        if string.match(file, ".dfpwm") then
+            table.insert(audioFiles, file)
+        end
+    end
+
+    print("Available Audio Files (found "..#audioFiles.."):")
+
+    for i, file in ipairs(audioFiles) do
+        print(i, file)
+    end
+end
+
 function updateMonitorSongName(newName, currentChunk)
     songName = newName
     for _, monitor in pairs(monitors) do
@@ -90,6 +106,7 @@ term.setCursorPos(1, 1)
 updateMonitorSongName("None")
 broadcast("None", 0, 0, nil, StationName)
 print("Simple Music/Radio Player by Specifix")
+listDfpwmFiles()
 while true do
     term.setTextColor(colors.yellow)
     write("Player> ")
@@ -129,4 +146,5 @@ while true do
         broadcast("None", 0, 0, nil, StationName)
     end
     term.setTextColor(colors.white)
+    listDfpwmFiles()
 end
