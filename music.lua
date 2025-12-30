@@ -16,6 +16,7 @@ local songName = "None"
 local numChunks = 0
 local CHUNK_SIZE = 16 * 1024
 local SAMPLE_RATE = 48000
+local SECONDS_PER_CHUNK = (CHUNK_SIZE * 8) / SAMPLE_RATE
 
 local radioConfigs = {
     ["stationName"] = "ULTRAKILL",
@@ -37,6 +38,11 @@ function to_mss(totalSeconds)
   local m = math.floor(totalSeconds / 60)
   local s = totalSeconds % 60
   return string.format("%d:%02d", m, s)
+end
+
+function getLength(chunks)
+    local length = to_mss(chunks * SECONDS_PER_CHUNK)
+    return length
 end
 
 function readEnvOverride()
@@ -70,23 +76,6 @@ function getTotalChunks(file)
         _chunks = _chunks + 1
     end
     return _chunks
-end
-
-function getSongLength(songName)
-    local songLength = (fs.getSize(songName..".dfpwm") * 8) / SAMPLE_RATE
-    local songLengthString = to_mss(songLength)
-    return songLengthString
-end    
-
-function getCurrentPlayhead(currentChunk)
-    local secondsPerChunk = (CHUNK_SIZE * 8) / SAMPLE_RATE
-    return currentChunk * secondsPerChunk
-end
-
-function getCurrentLength(currentChunk)
-    local currentLength = getCurrentPlayhead(currentChunk)
-    local currentLengthString = to_mss(currentLength)
-    return currentLengthString
 end
 
 function broadcast(songName, currentChunk, numChunks, audio_chunk, stationName)
@@ -151,8 +140,8 @@ function updateMonitorSongName(newName, currentChunk)
             monitor.write(" chunks ")
             monitor.setTextColor(colors.yellow)
 
-            local songLength = getSongLength(songName)
-            local currentLength = getCurrentLength(currentChunk)
+            local songLength = getLength(numChunks)
+            local currentLength = getLength(currentChunk)
             monitor.write("("..currentLength.." / "..songLength..")")
         end
 
