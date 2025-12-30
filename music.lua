@@ -40,7 +40,7 @@ function readEnvOverride()
 
     local currentLine = 0
     local success = 0
-    for line in io.lines("/radio.env") then
+    for line in io.lines("/radio.env") do
         currentLine += 1
         local _split = string.split(line, "=")
         if #_split ~= 2 then
