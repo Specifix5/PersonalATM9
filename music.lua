@@ -3,7 +3,11 @@ local speaker = peripheral.find("speaker")
 local monitors = { peripheral.find("monitor") }
 local decoder = dfpwm.make_decoder()
 
-peripheral.find("modem", rednet.open)
+local rednetEnabled = false
+if #peripheral.find("modem") > 0 then
+    peripheral.find("modem", rednet.open)
+    rednetEnabled = true
+end
 
 local songName = "None"
 local numChunks = 0
@@ -92,6 +96,22 @@ function updateMonitorSongName(newName, currentChunk)
             monitor.setTextColor(colors.red)
             monitor.write("! EAS MODE ACTIVE !")
             monitor.setTextColor(colors.white)
+        end
+
+        if rednetEnabled then
+            monitor.setCursorPos(1, 6) 
+            monitor.setTextColor(colors.yellow)
+            monitor.write("REDNET ACTIVE, BROADCASTING!")
+            monitor.setTextColor(colors.white)
+            monitor.setCursorPos(1, 7)
+            monitor.write("Station: ")
+            monitor.setTextColor(colors.yellow)
+            monitor.write(StationName)
+            monitor.setTextColor(colors.white)
+            monitor.setCursorPos(1, 8)
+            monitor.write("Channel: ")
+            monitor.setTextColor(colors.yellow)
+            monitor.write("#"..os.getComputerId())
         end
 
         monitor.setCursorPos(1, 10) 
