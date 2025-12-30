@@ -14,6 +14,8 @@ end
 
 local songName = "None"
 local numChunks = 0
+local CHUNK_SIZE = 16 * 1024
+local SAMPLE_RATE = 48000
 
 local radioConfigs = {
     ["stationName"] = "ULTRAKILL",
@@ -29,6 +31,12 @@ function string.split(inputstr, sep)
       table.insert(t, str)
     end
     return t
+end
+
+function to_mss(totalSeconds)
+  local m = math.floor(totalSeconds / 60)
+  local s = totalSeconds % 60
+  return string.format("%d:%02d", m, s)
 end
 
 function readEnvOverride()
@@ -58,10 +66,27 @@ end
 
 function getTotalChunks(file)
     local _chunks = 0
-    for chunk in io.lines(file, 16 * 1024) do
+    for chunk in io.lines(file, CHUNK_SIZE) do
         _chunks = _chunks + 1
     end
     return _chunks
+end
+
+function getSongLength(songName)
+    local songLength = (fs.getSize(songName..".dfpwm") * 8) / SAMPLE_RATE
+    local songLengthString = to_mss(songLength)
+    return songLengthString
+end    
+
+function getCurrentPlayhead(currentChunk)
+    local secondsPerChunk = (CHUNK_SIZE * 8) / SAMPLE_RATE
+    return currentChunk * secondsPerChunk
+end
+
+function getCurrentLength(currentChunk)
+    local currentLength = getCurrentPlayhead(currentChunk)
+    local currentLengthString = to_mss(currentLength)
+    return currentLengthString
 end
 
 function broadcast(songName, currentChunk, numChunks, audio_chunk, stationName)
@@ -123,7 +148,12 @@ function updateMonitorSongName(newName, currentChunk)
             monitor.setTextColor(colors.yellow)
             monitor.write(currentChunk.."/"..numChunks)
             monitor.setTextColor(colors.white)
-            monitor.write(" chunks")
+            monitor.write(" chunks ")
+            monitor.setTextColor(colors.yellow)
+
+            local songLength = getSongLength(songName)
+            local currentLength = getCurrentLength(currentChunk)
+            monitor.write("("..currentLength.." / "..songLength..")")
         end
 
         if radioConfigs["EAS"] then
@@ -177,7 +207,7 @@ while true do
         updateMonitorSongName(string.split(file, ".")[1], 0)
         broadcast(songName, 0, numChunks, nil, radioConfigs["stationName"])
         print("Now playing: "..songName)
-        for chunk in io.lines(file, 16 * 1024) do
+        for chunk in io.lines(file, CHUNK_SIZE) do
             chunks = chunks + 1
             updateMonitorSongName(songName, chunks)
             broadcast(songName, chunks, numChunks, chunk, radioConfigs["stationName"])
