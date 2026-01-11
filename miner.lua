@@ -33,6 +33,7 @@ while running do
         failAmount = failAmount + 1
         if failAmount > 3 then
             print("Can't detect any blocks! Retry count: "..failAmount)
+            sleep(10)
         end
     else
         failAmount = 0
