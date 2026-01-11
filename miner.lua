@@ -1,4 +1,4 @@
-local miner = peripheral.wrap("left")
+local miner = peripheral.wrap("digitalMiner")
 
 local function mine()
     if miner.getToMine() == 0 then
@@ -10,7 +10,7 @@ local function mine()
 end
 
 term.clear()
-print("By Specifix5 -- Digital Miner Restarter")
+print("By Specifix5 -- Digital Miner Restarter v1.1")
 print("Starting to mine now!")
 
 local running = true
@@ -26,10 +26,10 @@ while running do
     if previousAmount == 0 and miner.getToMine() == 0 then
         failAmount = failAmount + 1
         if failAmount > 3 then
-            print("Can't detect any blocks -- Stopping, requires manual intervention!")
-            running = false
+            print("Can't detect any blocks! Retry count: "..failAmount)
         end
     else
+        failAmount = 0
         previousAmount = miner.getToMine()
     end
 end
