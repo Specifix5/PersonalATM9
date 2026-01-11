@@ -1,4 +1,10 @@
-local miner = peripheral.wrap("digitalMiner")
+local miners = { peripheral.find("digitalMiner") }
+if #miners == 0 then
+    print("No Digital miners found!")
+    return
+end
+
+local miner = miners[1]
 
 local function mine()
     if miner.getToMine() == 0 then
