@@ -16,7 +16,7 @@ local function mine()
 end
 
 term.clear()
-print("By Specifix5 -- Digital Miner Restarter v1.1")
+print("By Specifix5 -- Digital Miner Restarter v1.2")
 print("Starting to mine now!")
 
 local running = true
