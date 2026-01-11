@@ -19,6 +19,10 @@ local previousAmount = -1
 local failAmount = 0
 
 while running do
+    if not mine() then
+        sleep(10)
+    end
+    
     if previousAmount == 0 and miner.getToMine() == 0 then
         failAmount = failAmount + 1
         if failAmount > 3 then
@@ -27,9 +31,5 @@ while running do
         end
     else
         previousAmount = miner.getToMine()
-    end
-
-    if not mine() then
-        sleep(10)
     end
 end
